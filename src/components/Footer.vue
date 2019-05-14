@@ -90,10 +90,10 @@ export default {
 }
 .footer:before {
   content: "";
-  /* position: absolute;
+  position: absolute;
   right: 0;
   bottom: 0;
-  left: 0; */
+  left: 0;
   height: 50px;
   overflow: hidden;
   box-shadow: 0 1px 1px rgba(0, 0, 0, 0.2), 0 8px 0 -3px #f6f6f6,
