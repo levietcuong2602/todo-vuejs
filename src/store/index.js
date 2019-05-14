@@ -21,9 +21,11 @@ export const store = new Vuex.Store({
     getFilterModeCurrent(state) {
       return state.filterModeCurrent;
     },
-    getCountTodoYetCompleted(state) {
-      const arr = state.todos.filter(todo => !todo.isCompleted);
-      return arr.length;
+    getCountTodoYetComplete(state) {
+      return state.todos.filter(todo => !todo.isCompleted).length;
+    },
+    getCountTodoCompleted(state) {
+      return state.todos.filter(todo => todo.isCompleted).length;
     }
   },
   mutations: {
@@ -55,6 +57,9 @@ export const store = new Vuex.Store({
     },
     [Types.UPDATE_FILTER_MODE_CURRENT](state, filterModeUpdate) {
       state.filterModeCurrent = filterModeUpdate;
+    },
+    [Types.DELETE_ALL_TODO_COMPLETED](state) {
+      state.todos = state.todos.filter(todo => !todo.isCompleted);
     }
   }
 });

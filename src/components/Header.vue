@@ -31,9 +31,9 @@ export default {
       this.text = "";
     }
   },
-  mounted() {
-    console.log("Mouted-Header");
-  }
+  // mounted() {
+  //   console.log("Mouted-Header");
+  // }
 };
 </script>
 <style>

@@ -22,7 +22,7 @@ export default {
     Footer
   },
   computed: {
-    ...mapGetters(["filterTodos", "getCountTodoYetCompleted"])
+    ...mapGetters(["filterTodos"])
   },
   // beforeCreate() {
   //   console.log("beforeCreate");
@@ -39,10 +39,7 @@ export default {
   // beforeMount() {
   //   console.log("beforeMount");
   // },
-  mounted() {
-    console.log("Mounted-App: ", this.filterTodos);
-    console.log("Mounted-App: ", this.getCountTodoYetCompleted);
-  }
+  // 
 };
 </script>
 

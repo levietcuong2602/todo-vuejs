@@ -1,7 +1,7 @@
 <template>
   <div class="footer">
     <span class="todo-count">
-      <strong>{{calculateCountTodo()}}</strong>
+      <strong>{{getCountTodoYetComplete}}</strong>
       <span>items left</span>
     </span>
     <ul class="filters">
@@ -27,7 +27,11 @@
         >Completed</a>
       </li>
     </ul>
-    <button class="clear-completed" :style="{display: 'none'}">Clear Completed</button>
+    <button
+      class="clear-completed"
+      :style="{display: getCountTodoCompleted > 0 ?'':'none'}"
+      @click="clearCompleted"
+    >Clear Completed</button>
   </div>
 </template>
 <script>
@@ -36,7 +40,10 @@ import {
   FILTER_MODE_ACTIVE,
   FILTER_MODE_COMPLETED
 } from "../constants";
-import { UPDATE_FILTER_MODE_CURRENT } from "../store/type.js";
+import {
+  UPDATE_FILTER_MODE_CURRENT,
+  DELETE_ALL_TODO_COMPLETED
+} from "../store/type.js";
 import { mapGetters } from "vuex";
 
 export default {
@@ -52,24 +59,24 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["getFilterModeCurrent"])
+    ...mapGetters([
+      "getFilterModeCurrent",
+      "getCountTodoYetComplete",
+      "getCountTodoCompleted"
+    ])
   },
   methods: {
     changeFilterMode: function(filterMode) {
       this.filterMode = filterMode;
       this.$store.commit(UPDATE_FILTER_MODE_CURRENT, filterMode);
     },
-    calculateCountTodo: function() {
-      return this.todoList.filter(todo => !todo.isCompleted).length;
+    clearCompleted() {
+      this.$store.commit(DELETE_ALL_TODO_COMPLETED);
     }
-  },
-  mounted() {
-    console.log("Mounted-Footer: ", this.getCountTodoYetCompleted);
-    console.log(
-      "Mounted-Footer: ",
-      this.$store.getters.getCountTodoYetCompleted
-    );
   }
+  // mounted() {
+  //   console.log("Mounted-Footer: ", this.getCountTodoYetComplete);
+  // }
 };
 </script>
 <style>

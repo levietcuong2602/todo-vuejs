@@ -41,9 +41,9 @@ export default {
   // updated() {
   //   console.log("updated", this.isCheckAll);
   // },
-  mounted() {
-    console.log("Mouted-Main");
-  }
+  // mounted() {
+  //   console.log("Mouted-Main");
+  // }
 };
 </script>
 <style>
