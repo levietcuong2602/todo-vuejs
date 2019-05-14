@@ -1,14 +1,14 @@
 <template>
   <li>
-    <div class="view" :style="{display: displayView}">
+    <div v-if="!editMode" class="view">
       <input class="toggle" type="checkbox" v-model="todo.isCompleted" @click="checkItemTodo">
       <label class="todo-content" @dblclick="showInput">{{todo.text}}</label>
       <button class="destroy" @click="deleteTodoItem"></button>
     </div>
     <input
+      v-else
       class="edit"
       type="text"
-      :style="{display: displayInput}"
       @blur="hiddenInput"
       ref="inputEdit"
       v-model="todo.text"
@@ -17,8 +17,7 @@
   </li>
 </template>
 <script>
-import { constants } from "crypto";
-import { eventBus } from "../main.js";
+import { DELETE_ITEM_IN_TODOS, UPDATE_ITEM_IN_TODOS } from "../store/type.js";
 
 export default {
   name: "todo",
@@ -27,36 +26,25 @@ export default {
   },
   data: function() {
     return {
-      displayView: "",
-      displayInput: "none"
+      editMode: false
     };
   },
   methods: {
     deleteTodoItem: function() {
-      eventBus.$emit("delete", this.todo.id);
+      this.$store.commit(DELETE_ITEM_IN_TODOS, this.todo.id);
     },
     checkItemTodo: function() {
-      eventBus.$emit("checkItemTodo", this.todo);
+      this.$store.commit(UPDATE_ITEM_IN_TODOS, this.todo);
     },
     showInput: function() {
-      this.displayView = "none";
-      this.displayInput = "flex";
+      this.editMode = true;
       this.$nextTick(() => this.$refs.inputEdit.focus());
     },
     hiddenInput: function() {
-      this.displayView = "";
-      this.displayInput = "none";
-      eventBus.$emit("editTodo", {...this.todo});
-    },
+      this.editMode = false;
+      this.$store.commit(UPDATE_ITEM_IN_TODOS, this.todo);
+    }
   }
-  // beforeUpdate() {
-  //   const temp = {...this.todo};
-  //   console.log("before update: ", temp);
-  // },
-  // updated() {
-  //   const temp = {...this.todo};
-  //   console.log("updated: ", temp);
-  // }
 };
 </script>
 <style>
@@ -86,7 +74,7 @@ export default {
   content: "x";
 }
 .edit {
-  display: none;
+  display: flex;
   position: relative;
   right: -55px;
   margin: 0;

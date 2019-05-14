@@ -8,11 +8,9 @@ import Todo from "./Todo.vue";
 
 export default {
   name: "todo-list",
+  props: ["todoList"],
   components: {
     Todo
-  },
-  props: {
-    todoList: Array,
   }
 };
 </script>

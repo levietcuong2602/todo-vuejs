@@ -1,8 +1,8 @@
 <template>
   <div id="app">
-    <Header @addTodo="addTodo"/>
-    <Main :todoList="filter()" @checkAllTodo="checkAll"/>
-    <Footer :todoList="todos"/>
+    <Header/>
+    <Main :todoList="filterTodos"/>
+    <Footer :todoList="filterTodos"/>
   </div>
 </template>
 
@@ -11,14 +11,8 @@ import Header from "./components/Header.vue";
 import Main from "./components/Main.vue";
 import Footer from "./components/Footer.vue";
 
-import { eventBus } from "./main.js";
 import uuid4 from "uuid/v4";
-
-import {
-  FILTER_MODE_ALL,
-  FILTER_MODE_ACTIVE,
-  FILTER_MODE_COMPLETED
-} from "./constants";
+import { mapGetters } from "vuex";
 
 export default {
   name: "app",
@@ -27,85 +21,27 @@ export default {
     Main,
     Footer
   },
-  data: function() {
-    return {
-      todos: [
-        {
-          id: uuid4(),
-          isCompleted: true,
-          text: "Cooking Food"
-        },
-        {
-          id: uuid4(),
-          isCompleted: false,
-          text: "Read Book"
-        },
-        {
-          id: uuid4(),
-          isCompleted: false,
-          text: "Writing paper"
-        }
-      ],
-      filterMode: FILTER_MODE_ALL
-    };
+  computed: {
+    ...mapGetters(["filterTodos", "getCountTodoYetCompleted"])
   },
-  methods: {
-    addTodo: function(todo) {
-      this.todos.unshift({
-        id: uuid4(),
-        isCompleted: false,
-        text: todo
-      });
-    },
-    deleteTodo: function(todoId) {
-      this.todos = this.todos.filter(value => value.id !== todoId);
-    },
-    checkAll: function(isCheck) {
-      this.todos = this.todos.map(todo => {
-        return {
-          ...todo,
-          isCompleted: isCheck
-        };
-      });
-    },
-    checkItemTodo: function(todoItem) {
-      this.todos = this.todos.map(todo => {
-        return todo.id === todoItem.id ? { ...todoItem } : todo;
-      });
-    },
-    filter: function() {
-      if (this.filterMode === FILTER_MODE_ALL) {
-        return this.todos.filter(todo => true);
-      } else if (this.filterMode === FILTER_MODE_ACTIVE) {
-        return this.todos.filter(todo => {
-          return !todo.isCompleted;
-        });
-      } else if (this.filterMode === FILTER_MODE_COMPLETED) {
-        return this.todos.filter(todo => {
-          return todo.isCompleted;
-        });
-      }
-      return [];
-    }
-  },
-  created() {
-    eventBus.$on("delete", todo => {
-      this.deleteTodo(todo);
-    });
-
-    eventBus.$on("checkItemTodo", todo => {
-      this.checkItemTodo(todo);
-    });
-
-    eventBus.$on("changeFilterMode", filterMode => {
-      this.filterMode = filterMode;
-    });
-
-    eventBus.$on("editTodo", todoEdit => {
-      this.todos = this.todos.map(todo => {
-        return todo.id === todoEdit.id ? todoEdit : todo;
-      });
-    });
+  // beforeCreate() {
+  //   console.log("beforeCreate");
+  // },
+  // created() {
+  //   console.log("Created");
+  // },
+  // beforeUpdate() {
+  //   console.log("beforeUpdate");
+  // },
+  // updated() {
+  //   console.log("updated");
+  // },
+  // beforeMount() {
+  //   console.log("beforeMount");
+  // },
+  mounted() {
+    console.log("Mounted-App: ", this.filterTodos);
+    console.log("Mounted-App: ", this.getCountTodoYetCompleted);
   }
 };
 </script>

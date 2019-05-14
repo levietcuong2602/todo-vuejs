@@ -1,10 +1,13 @@
-import Vue from 'vue'
-import App from './App.vue'
+import Vue from "vue";
+import App from "./App.vue";
 
-export const eventBus = new Vue();
+Vue.config.productionTip = false;
+import { store } from "./store";
+import { todoFilters } from './filters/todoFilters';
 
-Vue.config.productionTip = false
+Vue.filter('todoFilters', todoFilters);
 
 new Vue({
   render: h => h(App),
-}).$mount('#app')
+  store
+}).$mount("#app");

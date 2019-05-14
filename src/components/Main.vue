@@ -6,9 +6,13 @@
 </template>
 <script>
 import TodoList from "./TodoList.vue";
+import { UPDATE_IS_COMPLETED_ALL_TODO } from "../store/type.js";
 
 export default {
   name: "main-todo",
+  props: {
+    todoList: Array
+  },
   data: function() {
     return {
       isCheckAll: false
@@ -17,22 +21,29 @@ export default {
   components: {
     TodoList
   },
-  props: {
-    todoList: Array,
-    checkAllTodo: Function
-  },
   methods: {
     checkAll: function() {
+      // vì method chạy trước beforUpdate, updated
+      // nên isCheckAll chưa đc cập nhật ở đây.
       this.isCheckAll = !this.isCheckAll;
-      this.$emit("checkAllTodo", this.isCheckAll);
+      this.$store.commit(UPDATE_IS_COMPLETED_ALL_TODO, this.isCheckAll);
     }
-  }
+  },
+  // beforeCreate() {
+  //   console.log("beforeCreate", this.isCheckAll);
+  // },
+  // created() {
+  //   console.log("Created", this.isCheckAll);
+  // },
   // beforeUpdate() {
-  //   console.log("before update: ", this.isCheckAll);
+  //   console.log("beforeUpdate", this.isCheckAll);
   // },
   // updated() {
-  //   console.log("updated: ", this.isCheckAll);
-  // }
+  //   console.log("updated", this.isCheckAll);
+  // },
+  mounted() {
+    console.log("Mouted-Main");
+  }
 };
 </script>
 <style>

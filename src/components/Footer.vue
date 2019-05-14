@@ -1,33 +1,33 @@
 <template>
   <div class="footer">
     <span class="todo-count">
-      <strong>{{calculateTodo()}}</strong>
+      <strong>{{calculateCountTodo()}}</strong>
       <span>items left</span>
     </span>
     <ul class="filters">
       <li>
         <a
-          :class="{selected: filterMode === FILTER_MODE_ALL}"
+          :class="{selected: getFilterModeCurrent === FILTER_MODE_ALL}"
           href="#"
           @click="changeFilterMode(FILTER_MODE_ALL)"
         >All</a>
       </li>
       <li>
         <a
-          :class="{selected: filterMode === FILTER_MODE_ACTIVE}"
+          :class="{selected: getFilterModeCurrent === FILTER_MODE_ACTIVE}"
           href="#"
           @click="changeFilterMode(FILTER_MODE_ACTIVE)"
         >Active</a>
       </li>
       <li>
         <a
-          :class="{selected: filterMode === FILTER_MODE_COMPLETED}"
+          :class="{selected: getFilterModeCurrent === FILTER_MODE_COMPLETED}"
           href="#"
           @click="changeFilterMode(FILTER_MODE_COMPLETED)"
         >Completed</a>
       </li>
     </ul>
-    <button class="clear-completed" :style="{display: displayButton}">Clear Completed</button>
+    <button class="clear-completed" :style="{display: 'none'}">Clear Completed</button>
   </div>
 </template>
 <script>
@@ -36,7 +36,8 @@ import {
   FILTER_MODE_ACTIVE,
   FILTER_MODE_COMPLETED
 } from "../constants";
-import { eventBus } from "../main";
+import { UPDATE_FILTER_MODE_CURRENT } from "../store/type.js";
+import { mapGetters } from "vuex";
 
 export default {
   name: "footer-todo",
@@ -47,26 +48,27 @@ export default {
     return {
       FILTER_MODE_ALL: FILTER_MODE_ALL,
       FILTER_MODE_ACTIVE: FILTER_MODE_ACTIVE,
-      FILTER_MODE_COMPLETED: FILTER_MODE_COMPLETED,
-      filterMode: FILTER_MODE_ALL,
-      displayButton: 'none',
+      FILTER_MODE_COMPLETED: FILTER_MODE_COMPLETED
     };
+  },
+  computed: {
+    ...mapGetters(["getFilterModeCurrent"])
   },
   methods: {
     changeFilterMode: function(filterMode) {
       this.filterMode = filterMode;
-      eventBus.$emit("changeFilterMode", filterMode);
+      this.$store.commit(UPDATE_FILTER_MODE_CURRENT, filterMode);
     },
-    calculateTodo: function() {
+    calculateCountTodo: function() {
       return this.todoList.filter(todo => !todo.isCompleted).length;
     }
   },
   mounted() {
-    const check = this.todoList.some(todo => todo.isCompleted === true);
-    console.log(check);
-    if (check) {
-      this.displayButton = '';
-    }
+    console.log("Mounted-Footer: ", this.getCountTodoYetCompleted);
+    console.log(
+      "Mounted-Footer: ",
+      this.$store.getters.getCountTodoYetCompleted
+    );
   }
 };
 </script>
@@ -122,7 +124,6 @@ export default {
   border-radius: 3px;
 }
 .clear-completed {
-  /* display: none; */
   position: relative;
   left: 120px;
   margin: 0;

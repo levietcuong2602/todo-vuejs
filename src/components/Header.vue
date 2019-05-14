@@ -12,9 +12,10 @@
   </div>
 </template>
 <script>
+import * as Types from "../store/type.js";
+
 export default {
   name: "header-todo",
-  props: ["addTodo"],
   data: function() {
     return {
       text: ""
@@ -26,9 +27,12 @@ export default {
       this.text = event.target.value;
     },
     handleAddTodo: function() {
-      this.$emit("addTodo", this.text);
+      this.$store.commit(Types.ADD_ITEM_IN_TODOS, this.text);
       this.text = "";
     }
+  },
+  mounted() {
+    console.log("Mouted-Header");
   }
 };
 </script>
