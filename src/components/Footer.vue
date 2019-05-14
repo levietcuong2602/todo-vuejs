@@ -2,7 +2,7 @@
   <div class="footer">
     <span class="todo-count">
       <strong>{{getCountTodoYetComplete}}</strong>
-      <span>items left</span>
+      <span> items left </span>
     </span>
     <ul class="filters">
       <li>
